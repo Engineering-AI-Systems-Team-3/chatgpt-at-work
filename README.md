@@ -8,7 +8,8 @@ We test this by mapping millions of publicly available ChatGPT interaction logs 
 - map the same interactions to the roles a chatbot can take (for example, friend, colleague, or trainer), using the role set in [2];
 - evaluate both mappings with a human-in-the-loop protocol, with a focus on separating plausible automation targets from spurious matches; and
 - release a dataset and analysis code so others can reproduce our results.
-  References
+
+## References
 
 [1] WildChat Datasets: 4.8M and 50M
 
