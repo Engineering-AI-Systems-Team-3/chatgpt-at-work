@@ -1,0 +1,18 @@
+[
+  {
+    "role": "user",
+    "content": "The following is a conversation between ChatGPT, an AI assistant, and a user:\n{{conversation}}"
+  },
+  {
+    "role": "assistant",
+    "content": "I understand."
+  },
+  {
+    "role": "user",
+    "content": "Your job is to answer this question about the preceding conversation:\n<question>\nDoes the conversation possibly involve an occupational task?\n</question>\nWhat is the answer? You MUST answer either only \"Yes\" or \"No\". Provide the answer in <answer> tags with no other commentary."
+  },
+  {
+    "role": "assistant",
+    "content": "Sure, the answer to the question is: <answer>"
+  }
+]
