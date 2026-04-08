@@ -9,6 +9,6 @@
   },
   {
     "role": "user",
-    "content": "Consider the following list of classification options:\n{options_str}\nYour job is to identify which option best describes the previous conversation. In this case, the provided options are occupational tasks. Your job is to identify which task is performed by the assistant in the previous human-AI assistant conversation. What is the answer? You MUST provide an option exactly as written above. If multiple options apply, choose the single-most pertinent one. First, start off by considering various aspects of the conversation in <scratchpad> tags in at most four sentences, and then provide the final answer in <answer> tags with no other commentary."
+    "content": "Consider the following list of classification options:\n{options_str}\nYour job is to identify which option best describes the previous conversation. In this case, the provided options are occupational tasks. Your job is to identify which task is performed by the assistant in the previous human-AI assistant conversation. What is the answer? You MUST provide an option exactly as written above; you are not allowed to modify the option string in any way. If multiple options apply, choose the single-most pertinent one. First, start off by considering various aspects of the conversation in <scratchpad> tags in at most four sentences, and then provide the final answer in <answer> tags with no other commentary."
   }
 ]
