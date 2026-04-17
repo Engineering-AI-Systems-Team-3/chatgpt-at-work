@@ -5,6 +5,6 @@
   },
   {
     "role": "user",
-    "content": "Occupation: {occupation}\nTask: {task}\nConversation:{conversation}\nPlease label the task that is being performed in the conversation. You may use a <scratchpad> to write your reasoning and then provide the final label in <answer> tags with no other text. The label should be one of E0, E1, E2, or E3."
+    "content": "Occupation: {occupation}\nTask: {task}\nPlease label the task above. Before answering, use a <scratchpad> to break down your reasoning process and then provide the final label in <answer> tags with no other text. The label should be one of E0, E1, E2, or E3."
   }
 ]
