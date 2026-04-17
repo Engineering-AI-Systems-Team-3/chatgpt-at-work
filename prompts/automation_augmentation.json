@@ -5,6 +5,6 @@
   },
   {
     "role": "user",
-    "content": "Occupation: {occupation}\nTask: {task}\nPlease label the task above. Before answering, use a <scratchpad> to break down your reasoning process and then provide the final label in <answer> tags with no other text. The label should be one of E0, E1, E2, or E3."
+    "content": "Occupation: {occupation}\nTask: {task}\nPlease label the task above. Before answering, use a <scratchpad> to break down your reasoning process. At the end, provide the final label in <answer> tags. You MUST not include any other text between the tags other than the label. The label should be one of E0, E1, E2, or E3."
   }
 ]
