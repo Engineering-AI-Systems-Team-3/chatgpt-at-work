@@ -8,3 +8,5 @@ torch
 scikit-learn
 chromadb
 scipy
+matplotlib
+tqdm
