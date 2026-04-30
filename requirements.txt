@@ -10,3 +10,6 @@ chromadb
 scipy
 matplotlib
 tqdm
+bertopic
+factor-analyzer
+seaborn
