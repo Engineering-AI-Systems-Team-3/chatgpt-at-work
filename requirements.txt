@@ -13,3 +13,4 @@ tqdm
 bertopic
 factor-analyzer
 seaborn
+tenacity
