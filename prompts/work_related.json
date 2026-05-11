@@ -9,10 +9,6 @@
   },
   {
     "role": "user",
-    "content": "Your job is to answer this question about the preceding conversation:\n<question>\nDoes the conversation possibly involve an occupational task?\n</question>\nWhat is the answer? You MUST answer either only \"Yes\" or \"No\". Provide the answer in <answer> tags with no other commentary."
-  },
-  {
-    "role": "assistant",
-    "content": "Sure, the answer to the question is: <answer>"
+    "content": "Your job is to answer this question about the preceding conversation:\n<question>\nDoes the conversation possibly involve an occupational task?\n</question>\nWhat is the answer? Respond in JSON format like this: {\"answer\": \"Yes\"} or {\"answer\": \"No\"}.\nYou MUST answer either only \"Yes\" or \"No\" in the answer field."
   }
 ]
