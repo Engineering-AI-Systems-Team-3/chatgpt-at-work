@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 from openai import RateLimitError
 
-from src.config import MODEL_ID, WAIT_TIME
+from utilities.config import MODEL_ID, WAIT_TIME
 
 
 class RobustEncoder(json.JSONEncoder):
@@ -193,11 +193,25 @@ def format_tasks(df: pd.DataFrame, column_name: str) -> pd.DataFrame:
     return df
 
 
-def format_options(tasks: pd.DataFrame) -> str:
+def format_options(tasks: list[str]) -> str:
     """
-    Render a DataFrame of tasks as a newline-separated string for prompts.
+    Render a list of tasks as a newline-separated string for prompts.
 
-    :param tasks: DataFrame with a ``cluster_name`` column.
+    :param tasks: List of task names.
     :return: One task name per line.
     """
-    return "".join(f"{row['cluster_name']}\n" for _, row in tasks.iterrows())
+    return "".join(f"{task}\n" for task in tasks)
+
+
+def format_last_level_options(professions: list[str], tasks: list[str]) -> str:
+    """
+    Render a list of profession-task pairs as a newline-separated string for prompts.
+
+    :param professions: List of profession names.
+    :param tasks: List of task names corresponding to the professions.
+    :return: One profession-task pair per line, formatted as ``profession: task``.
+    """
+    options_str = ""
+    for profession, task in zip(professions, tasks):
+        options_str += f"<option><profession>{profession}</profession>\n<task>{task}</task></option>\n"
+    return options_str

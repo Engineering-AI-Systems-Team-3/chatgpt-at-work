@@ -11,10 +11,10 @@ from tenacity import (
     wait_exponential,
 )
 
-from src.config import BATCH_SIZE, MODEL_ID, WAIT_TIME
+from utilities.config import BATCH_SIZE, MODEL_ID, WAIT_TIME
 
 
-def create_batch_file(
+def _create_batch_file(
     filename: Path,
     messages: list,
     word_id: str,
@@ -55,7 +55,7 @@ def create_batch_file(
     wait=wait_exponential(multiplier=1, min=2, max=10),
     retry=retry_if_exception_type(InternalServerError),
 )
-def submit_batch_file(client, file_name: Path) -> str:
+def _submit_batch_file(client, file_name: Path) -> str:
     """
     Upload a batch file to OpenAI and create a batch job.
 
@@ -77,7 +77,7 @@ def submit_batch_file(client, file_name: Path) -> str:
     return batch_job.id
 
 
-def retrieve_batch_job_results(
+def _retrieve_batch_job_results(
     client,
     batch_job_id: str,
     output_path: Path,
@@ -187,18 +187,18 @@ def submit_and_retrieve(
             continue
         chunk_batch_file = batch_file.with_stem(f"{batch_file.stem}_{i}")
         chunk_output_file = output_file.with_stem(f"{output_file.stem}_{i}")
-        create_batch_file(
+        _create_batch_file(
             filename=chunk_batch_file,
             messages=chunk,
             word_id=word_id,
             id_offset=i * batch_size,
         )
-        job_id = submit_batch_file(client=client, file_name=chunk_batch_file)
+        job_id = _submit_batch_file(client=client, file_name=chunk_batch_file)
         batch_jobs.append((job_id, chunk_output_file))
         print(f"Submitted batch {i} ({len(chunk)} requests): {job_id}")
 
     for job_id, chunk_output_file in batch_jobs:
-        retrieve_batch_job_results(
+        _retrieve_batch_job_results(
             client=client, batch_job_id=job_id, output_path=chunk_output_file
         )
         all_results.update(parse_func(chunk_output_file))

@@ -1,0 +1,10 @@
+[
+  {
+    "role": "system",
+    "content": "The following is a conversation between an AI assistant and a user:\n\n{conversation}\n\nConsider the following list of classification options:\n<options>{options_str}\n</options>\nYour job is to identify which option best describes the previous conversation. In this case, the provided options are occupational tasks.\nYour job is to identify which task is performed by the assistant in the previous human-AI assistant conversation. What is the answer? You MUST provide five distinct options exactly as written above. If more than 5 options apply, choose the 5 most pertinent ones. First, start off by considering various aspects of the conversation in the scratchpad field in at most four sentences, and then provide the final answer in the answer field.\nThe final output must be a JSON object that uses the following format:\n\n{\n  \"scratchpad\": \"<your reasoning process in at most four sentences>\",\n  \"answer\": \"[\"<option1>\",\n \"<option2>\",\n \"<option3>\",\n \"<option4>\",\n \"<option5>\"]\"\n}\n\nRules:\n- The answer must be a JSON array containing exactly 5 distinct options provided above, and they must be exactly as written above. Do not modify the option text in any way.\n- The scratchpad should contain your reasoning process, and it should be at most four sentences long."
+  },
+  {
+    "role": "user",
+    "content": "{conversation}\n\nGiven the conversation above, identify the top 5 most plausible occupational tasks. Return your answer in JSON format."
+  }
+]

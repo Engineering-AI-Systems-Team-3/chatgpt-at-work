@@ -8,14 +8,15 @@ MAX_WORKERS = 128
 WAIT_TIME = 60
 RANDOM_SEED = 42
 BUFFER_SIZE = 10_000
-SAMPLE_PERCENTAGE = 0.03
+SAMPLE_PERCENTAGE = 0.035
 VALIDATION_SAMPLE = 100
 CHECKPOINT_INTERVAL = 10
 BATCH_SIZE = 5_000
 
 #  Model
 # MODEL_ID = "nvidia/nemotron-3-super-120b-a12b:free"
-MODEL_ID = "gpt-5.4-nano-2026-03-17"
+# MODEL_ID = "gpt-5.4-nano-2026-03-17"
+MODEL_ID = "gpt-5-mini-2025-08-07"
 
 #  API
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -51,9 +52,14 @@ WILDCHAT_FULL = INPUT_DATA_DIR / "WildChat-4.8M"
 WILDCHAT_ENGLISH = INPUT_DATA_DIR / "WildChat-4.8M-english"
 WILDCHAT_SAMPLES_FILE = INPUT_DATA_DIR / f"WildChat-4.8M-sample-{SAMPLE_PERCENTAGE}.csv"
 
+# Labeled files
+WORK_RELATED_LABELED_OUTPUT_PATH = LABELED_DATA_DIR / "work_related_750.csv"
+TASK_MAPPING_LABELED_OUTPUT_PATH = LABELED_DATA_DIR / "task_mapping_750.csv"
+
 #  Prompt files
 WORK_RELATED_PROMPT_PATH = PROMPTS_DIR / "work_related.json"
 TASK_MAPPING_PROMPT_PATH = PROMPTS_DIR / "task_mapping.json"
+LAST_LEVEL_TASK_MAPPING_PROMPT_PATH = PROMPTS_DIR / "last_level_task_mapping.json"
 LABOR_TRANSFER_PROMPT_PATH = PROMPTS_DIR / "labor_transfer.json"
 
 #  Output files
@@ -69,6 +75,9 @@ WORK_RELATED_BATCH_FILE = INPUT_BATCHES_DIR / f"work_related_{SAMPLE_PERCENTAGE}
 LABOR_TRANSFER_BATCH_FILE = (
     INPUT_BATCHES_DIR / f"labor_transfer_{SAMPLE_PERCENTAGE}.jsonl"
 )
+LEVEL_2_BATCH_FILE = INPUT_BATCHES_DIR / f"level2_{SAMPLE_PERCENTAGE}.jsonl"
+LEVEL_1_BATCH_FILE = INPUT_BATCHES_DIR / f"level1_{SAMPLE_PERCENTAGE}.jsonl"
+LEVEL_0_BATCH_FILE = INPUT_BATCHES_DIR / f"level0_{SAMPLE_PERCENTAGE}.jsonl"
 
 # Batch Output files
 LABOR_TRANSFER_BATCH_OUTPUT_FILE = (
@@ -76,6 +85,15 @@ LABOR_TRANSFER_BATCH_OUTPUT_FILE = (
 )
 WORK_RELATED_BATCH_OUTPUT_FILE = (
     OUTPUT_BATCHES_DIR / f"work_related_{SAMPLE_PERCENTAGE}_output.jsonl"
+)
+LEVEL_2_BATCH_OUTPUT_FILE = (
+    OUTPUT_BATCHES_DIR / f"level2_{SAMPLE_PERCENTAGE}_output.jsonl"
+)
+LEVEL_1_BATCH_OUTPUT_FILE = (
+    OUTPUT_BATCHES_DIR / f"level1_{SAMPLE_PERCENTAGE}_output.jsonl"
+)
+LEVEL_0_BATCH_OUTPUT_FILE = (
+    OUTPUT_BATCHES_DIR / f"level0_{SAMPLE_PERCENTAGE}_output.jsonl"
 )
 
 #  O*NET
@@ -103,3 +121,5 @@ MAJOR_CATEGORIES = {
     "51": "Production Occupations",
     "53": "Transportation and Material Moving Occupations",
 }
+
+HIERARCHY_PATH = DATA_PATH / "hierarchy" / "onet_hierarchy.json"
