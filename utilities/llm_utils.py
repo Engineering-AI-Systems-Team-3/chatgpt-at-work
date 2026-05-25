@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 from openai import RateLimitError
 
-from utilities.config import MODEL_ID, WAIT_TIME
+from utilities.config import OPENROUTER_MODEL_ID, WAIT_TIME
 
 
 class RobustEncoder(json.JSONEncoder):
@@ -98,7 +98,7 @@ def format_conversation(conversation: list[dict[str, str]] | str) -> str:
 def get_gpt_response(
     client,
     messages: list[dict[str, str]],
-    model_id: str = MODEL_ID,
+    model_id: str = OPENROUTER_MODEL_ID,
     max_retries: int = 5,
     wait_time: int = WAIT_TIME,
 ) -> str:

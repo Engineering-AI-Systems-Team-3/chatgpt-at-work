@@ -1,0 +1,23 @@
+[project]
+name = "chatgpt-at-work"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12.3"
+dependencies = [
+    "datasets>=4.8.5",
+    "geopy>=2.4.1",
+    "matplotlib>=3.10.9",
+    "numpy>=2.4.6",
+    "openai>=2.38.0",
+    "pandas>=3.0.3",
+    "python-dotenv>=1.2.2",
+    "scikit-learn>=1.8.0",
+    "seaborn>=0.13.2",
+    "sentence-transformers>=5.5.1",
+    "tenacity>=9.1.4",
+    "timezonefinder>=8.2.4",
+    "torch>=2.12.0",
+    "tqdm>=4.67.3",
+    "transformers>=5.9.0",
+]

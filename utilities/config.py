@@ -14,7 +14,7 @@ CHECKPOINT_INTERVAL = 10
 BATCH_SIZE = 5_000
 
 #  Model
-# MODEL_ID = "nvidia/nemotron-3-super-120b-a12b:free"
+OPENROUTER_MODEL_ID = "nvidia/nemotron-3-super-120b-a12b:free"
 # MODEL_ID = "gpt-5.4-nano-2026-03-17"
 MODEL_ID = "gpt-5-mini-2025-08-07"
 
