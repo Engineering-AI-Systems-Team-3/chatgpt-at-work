@@ -23,6 +23,7 @@ from .config import (
     TIMEZONES_OUTPUT_PATH,
     TASK_MAPPING_OUTPUT_PATH,
     LABOR_TRANSFER_OUTPUT_FILE,
+    JOB_ZONES_PATH,
 )
 from .llm_utils import (
     strip_messages,
@@ -63,4 +64,5 @@ __all__ = [
     "TASK_MAPPING_OUTPUT_PATH",
     "LABOR_TRANSFER_OUTPUT_FILE",
     "RateLimiter",
+    "JOB_ZONES_PATH",
 ]
