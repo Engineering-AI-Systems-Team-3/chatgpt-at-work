@@ -2,7 +2,6 @@ import json
 import os
 import time
 from pathlib import Path
-
 from openai import InternalServerError
 from tenacity import (
     retry,
@@ -10,7 +9,6 @@ from tenacity import (
     stop_after_attempt,
     wait_exponential,
 )
-
 from utilities.config import BATCH_SIZE, MODEL_ID, WAIT_TIME
 
 
@@ -133,8 +131,8 @@ def _retrieve_batch_job_results(
 def submit_and_retrieve(
     client,
     messages: list,
-    batch_file: Path,
-    output_file: Path,
+    batch_input_file: Path,
+    batch_output_file: Path,
     word_id: str,
     parse_func,
     batch_size: int = BATCH_SIZE,
@@ -145,8 +143,8 @@ def submit_and_retrieve(
 
     :param client: Initialised OpenAI client.
     :param messages: Full list of message lists to process.
-    :param batch_file: Template path for chunk batch files (stem is suffixed with ``_<i>``).
-    :param output_file: Template path for chunk output files (stem is suffixed with ``_<i>``).
+    :param batch_input_file: Template path for chunk batch files (stem is suffixed with ``_<i>``).
+    :param batch_output_file: Template path for chunk output files (stem is suffixed with ``_<i>``).
     :param word_id: Prefix for custom_id values inside each batch file.
     :param parse_func: Callable that receives a chunk output path and returns a dict.
     :param batch_size: Maximum number of messages per batch chunk.
@@ -156,7 +154,7 @@ def submit_and_retrieve(
     already_existing_chunks: list[int] = []
 
     print(
-        f"Submitting messages for {output_file.stem}: "
+        f"Submitting messages for {batch_output_file.stem}: "
         f"total {len(messages)} messages in {len(chunks)} batches "
         f"of up to {batch_size} messages each"
     )
@@ -164,7 +162,9 @@ def submit_and_retrieve(
     all_results: dict[str, str] = {}
 
     for idx in range(len(chunks)):
-        chunk_output_file = output_file.with_stem(f"{output_file.stem}_{idx}")
+        chunk_output_file = batch_output_file.with_stem(
+            f"{batch_output_file.stem}_{idx}"
+        )
         if chunk_output_file.exists():
             print(
                 f"Skipping batch {idx} ({len(chunks[idx])} requests): "
@@ -185,8 +185,8 @@ def submit_and_retrieve(
     for i, chunk in enumerate(chunks):
         if i in already_existing_chunks:
             continue
-        chunk_batch_file = batch_file.with_stem(f"{batch_file.stem}_{i}")
-        chunk_output_file = output_file.with_stem(f"{output_file.stem}_{i}")
+        chunk_batch_file = batch_input_file.with_stem(f"{batch_input_file.stem}_{i}")
+        chunk_output_file = batch_output_file.with_stem(f"{batch_output_file.stem}_{i}")
         _create_batch_file(
             filename=chunk_batch_file,
             messages=chunk,

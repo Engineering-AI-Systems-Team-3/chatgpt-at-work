@@ -1,16 +1,15 @@
 import ast
-import copy
 import datetime
 import json
 import re
 import time
-from pathlib import Path
-
 import numpy as np
 import pandas as pd
-from openai import RateLimitError
-
-from utilities.config import OPENROUTER_MODEL_ID, WAIT_TIME
+import random
+from typing import cast
+from openai import OpenAI, RateLimitError
+from utilities.config import OPENROUTER_MODEL_ID
+from utilities.RateLimiter import RateLimiter
 
 
 class RobustEncoder(json.JSONEncoder):
@@ -26,37 +25,6 @@ class RobustEncoder(json.JSONEncoder):
         if isinstance(obj, np.floating):
             return float(obj)
         return str(obj)
-
-
-# Prompt helpers
-
-
-def get_messages(path: Path) -> list[dict[str, str]]:
-    """
-    Load a prompt template from a JSON file.
-
-    :param path: Path to the JSON file containing a list of message dicts.
-    :return: List of message dicts (``role`` / ``content`` pairs).
-    """
-    with open(path, "r") as f:
-        return json.load(f)
-
-
-def build_messages(template: list[dict[str, str]], **kwargs) -> list[dict[str, str]]:
-    """
-    Fill ``{placeholder}`` slots in a prompt template with concrete values.
-
-    :param template: List of message dicts with optional ``{key}`` placeholders
-        in their ``content`` field.
-    :param kwargs: Key-value pairs mapping placeholder names to replacement strings.
-    :return: Deep copy of the template with all placeholders replaced.
-    """
-    msgs = copy.deepcopy(template)
-    for msg in msgs:
-        for key, value in kwargs.items():
-            if "{" + key + "}" in msg["content"]:
-                msg["content"] = msg["content"].replace("{" + key + "}", value)
-    return msgs
 
 
 #  Conversation helpers
@@ -86,8 +54,9 @@ def format_conversation(conversation: list[dict[str, str]] | str) -> str:
 
     formatted = ""
     for message in conversation:
-        role = message["role"]
-        content = message["content"]
+        msg = cast(dict, message)
+        role = msg["role"]
+        content = msg["content"]
         formatted += f"{role}: {content}\n"
     return formatted
 
@@ -100,14 +69,14 @@ def get_gpt_response(
     messages: list[dict[str, str]],
     model_id: str = OPENROUTER_MODEL_ID,
     max_retries: int = 5,
-    wait_time: int = WAIT_TIME,
+    base_wait: int = 1,
+    max_wait: int = 30,
 ) -> str:
     """
     Call the chat completions endpoint with basic retry logic.
 
-    Attempts to extract a clean answer from ``<answer>`` tags, a fenced JSON
-    block, or a bare JSON object/array in that order.  Falls back to returning
-    the raw stripped content.
+    Attempts to extract a clean answer a fenced JSON block, or a bare JSON object/array
+    in that order.  Falls back to returning the raw stripped content.
 
     :param client: Initialised OpenAI client.
     :param messages: Conversation history to send.
@@ -136,10 +105,6 @@ def get_gpt_response(
 
             dirty_result = content.strip()
 
-            tag_match = re.search(r"<answer>(.*?)</answer>", dirty_result, re.DOTALL)
-            if tag_match:
-                return tag_match.group(1)
-
             json_match = re.search(
                 r"```(?:json)?\s*(.*?)\s*```", dirty_result, re.DOTALL
             )
@@ -152,19 +117,30 @@ def get_gpt_response(
 
             return dirty_result
 
-        except RateLimitError:
-            wait = wait_time**attempt
+        except RateLimitError as e:
+            retry_after = None
+            if hasattr(e, "response") and e.response is not None:
+                retry_after = e.response.headers.get("Retry-After")
+
+            if retry_after:
+                wait = float(retry_after)
+            else:
+                wait = min(base_wait * (2**attempt), max_wait)
+
             print(
-                f"Rate limited (429). Waiting {wait}s before retry "
-                f"{attempt + 1}/{max_retries}..."
+                f"Rate limit hit (attempt {attempt + 1}). Retrying in {wait:.2f} seconds..."
             )
-            time.sleep(wait)
+
+            jitter = random.uniform(0, wait * 0.2)
+            time.sleep(wait + jitter)
 
     print(f"Failed after {max_retries} retries.")
     return ""
 
 
-def parallelize_llm_call(client, messages: list[dict[str, str]]) -> str:
+def parallelize_llm_call(
+    messages: list[dict[str, str]], client: OpenAI, rate_limiter: RateLimiter
+) -> str:
     """
     Thin wrapper around :func:`get_gpt_response` for use with
     ``concurrent.futures`` executors.
@@ -173,6 +149,7 @@ def parallelize_llm_call(client, messages: list[dict[str, str]]) -> str:
     :param messages: Messages to send.
     :return: Model response string.
     """
+    rate_limiter.acquire()
     return get_gpt_response(client=client, messages=messages)
 
 
@@ -191,6 +168,9 @@ def format_tasks(df: pd.DataFrame, column_name: str) -> pd.DataFrame:
         df[column_name].str.strip().str.lower().str.replace(r"[^\w\s]", "", regex=True)
     )
     return df
+
+
+# TODO: format_last_level_options non serve più, mentre format_options deve gestire professioni e task
 
 
 def format_options(tasks: list[str]) -> str:
