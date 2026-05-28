@@ -30,6 +30,8 @@ from .config import (
     LABOR_TRANSFER_LABELED_OUTPUT_PATH,
     FINAL_LABELED_OUTPUT_PATH,
     FINAL_OUTPUT_PATH,
+    SMALL_SAMPLE_INPUT_PATH,
+    RATE_LIMIT,
 )
 from .llm_utils import (
     strip_messages,
@@ -77,4 +79,6 @@ __all__ = [
     "LABOR_TRANSFER_LABELED_OUTPUT_PATH",
     "FINAL_LABELED_OUTPUT_PATH",
     "FINAL_OUTPUT_PATH",
+    "SMALL_SAMPLE_INPUT_PATH",
+    "RATE_LIMIT",
 ]

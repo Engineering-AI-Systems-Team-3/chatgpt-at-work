@@ -20,6 +20,7 @@ from utilities import (
     submit_and_retrieve,
     format_options,
     parallelize_llm_call,
+    RATE_LIMIT,
 )
 
 
@@ -74,40 +75,6 @@ def parse_task_mapping_batch_results(
     return results
 
 
-# TODO: Adattare al nuovo formato di risposta del modello
-def extract_level_0_answers(raw_answer: str) -> list[str] | None:
-    """
-    Extract a list of profession:task pairs from a raw level-0 model response,
-    handling both clean JSON lists and malformed string representations.
-
-    :param raw_answer: Raw string from the model response.
-    :return: List of strings or None if parsing fails.
-    """
-    if pd.isna(raw_answer) or not isinstance(raw_answer, str):
-        return None
-
-    try:
-        parsed = json.loads(raw_answer)
-        if isinstance(parsed, list):
-            return parsed
-    except (json.JSONDecodeError, ValueError):
-        pass
-
-    try:
-        parsed = ast.literal_eval(raw_answer)
-        if isinstance(parsed, list):
-            return parsed
-    except (ValueError, SyntaxError):
-        pass
-
-    match = re.search(r'"answer":\s*"\[(.*?)\]"', raw_answer, re.DOTALL)
-    if match:
-        elements = [el.strip().strip('"') for el in match.group(1).split('","')]
-        return [el for el in elements if el]
-
-    return None
-
-
 def check_consensus(items: list[str] | str) -> str | None:
     """
     Determine the majority profession from a list of "profession:task" strings.
@@ -134,8 +101,8 @@ def check_consensus(items: list[str] | str) -> str | None:
             for profession, stats in profession_stats.items():
                 if stats["count"] == max_count:
                     return f"{profession}:{stats['task']}"
-    except Exception:
-        print(f"Error processing items: {items}")
+    except Exception as e:
+        print(f"Error processing items: {items}: {e}")
     return None
 
 
@@ -204,8 +171,11 @@ def _direct_execution(
     :return: DataFrame with columns [conversation, professions, tasks].
     """
 
-    rate_limiter = RateLimiter(rate=20 / 60)
+    rate_limiter = RateLimiter(rate=RATE_LIMIT)
     conversations_list = conversations["conversation"].tolist()
+
+    print(f"Conversations to process: {(conversations_list)}")
+
     llm_call_func = functools.partial(
         parallelize_llm_call, client=client, rate_limiter=rate_limiter
     )
@@ -216,6 +186,8 @@ def _direct_execution(
         occupation_mapping(conversation=c, options_str=options_str, n_options=n_options)
         for c in conversations_list
     ]
+
+    print(formatted_messages[0:5])
 
     print(
         f"Running {len(formatted_messages)} direct Profession mapping calls via OpenRouter..."
@@ -229,7 +201,9 @@ def _direct_execution(
             )
         )
 
-    profession_responses = _parse_direct_responses(profession_responses_raw)
+    profession_responses = _parse_direct_responses(
+        raw_responses=profession_responses_raw
+    )
 
     # Task assignment
     task_messages = []

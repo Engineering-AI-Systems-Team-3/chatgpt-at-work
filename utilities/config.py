@@ -19,9 +19,11 @@ SAMPLE_PERCENTAGE = 0.035
 VALIDATION_SAMPLE = 100
 CHECKPOINT_INTERVAL = 10
 BATCH_SIZE = 5_000
+RATE_LIMIT = 60  # requests per minute
 
 #  Model
-OPENROUTER_MODEL_ID = "nvidia/nemotron-3-super-120b-a12b:free"
+# OPENROUTER_MODEL_ID = "nvidia/nemotron-3-super-120b-a12b:free"
+OPENROUTER_MODEL_ID = "openai/gpt-5-mini"
 MODEL_ID = "gpt-5-mini-2025-08-07"
 
 #  API
@@ -62,6 +64,7 @@ WILDCHAT_ENGLISH = INPUT_DATA_DIR / "WildChat-4.8M-english"
 WILDCHAT_SAMPLES_FILE = INPUT_DATA_DIR / f"WildChat-4.8M-sample-{SAMPLE_PERCENTAGE}.csv"
 
 # Labeled files
+SMALL_SAMPLE_INPUT_PATH = LABELED_DATA_DIR / f"small_sample_work_related.csv"
 WORK_RELATED_LABELED_OUTPUT_PATH = LABELED_DATA_DIR / "work_related.csv"
 TIMEZONES_LABELED_OUTPUT_PATH = LABELED_DATA_DIR / "timezones.csv"
 TASK_MAPPING_LABELED_OUTPUT_PATH = LABELED_DATA_DIR / "task_mapping.csv"

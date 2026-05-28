@@ -46,7 +46,7 @@ def find_timezones(df: pd.DataFrame) -> pd.DataFrame:
     timezones_records = []
 
     tf = TimezoneFinder(in_memory=True)
-    geolocator = Nominatim(user_agent="labor_transfer_project")
+    geolocator = Nominatim(user_agent="lt_project")
 
     for _, row in unique_locations.iterrows():
         state = row["state"]
@@ -71,7 +71,12 @@ def normalize_timezone(df: pd.DataFrame) -> pd.DataFrame:
     :param df: DataFrame with 'timestamp' (UTC) and 'timezone' columns.
     :return: DataFrame with an additional 'timestamp_local' column.
     """
-    df["timestamp"] = pd.to_datetime(df["timestamp"]).dt.tz_localize("UTC")
+    ts = pd.to_datetime(df["timestamp"])
+    if ts.dt.tz is None:
+        ts = ts.dt.tz_localize("UTC")
+    else:
+        ts = ts.dt.tz_convert("UTC")
+    df["timestamp"] = ts
     df["timestamp_local"] = df.apply(
         lambda row: row["timestamp"].tz_convert(row["timezone"]), axis=1
     )

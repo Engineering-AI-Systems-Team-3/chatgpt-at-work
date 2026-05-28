@@ -27,6 +27,8 @@ must be a JSON  object that uses the following format:
 Rules:
 - The answer field is a list of exactly {n_options} from the options provided above, and they must be exactly as written 
 above. Do not modify the option text in any way.
+- Each entry in the answer field must contain both the profession and the task value from the options provided, 
+formatted as "profession: task".
 - The options in the answer field should be ordered from the most to the least pertinent.
 - The scratchpad should contain your reasoning process, and it should be at most four sentences long.
 """

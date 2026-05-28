@@ -90,6 +90,7 @@ def get_gpt_response(
             response = client.chat.completions.create(
                 model=model_id,
                 messages=messages,
+                temperature=0.0,
             )
 
             if not hasattr(response, "choices") or not response.choices:
@@ -168,9 +169,6 @@ def format_tasks(df: pd.DataFrame, column_name: str) -> pd.DataFrame:
         df[column_name].str.strip().str.lower().str.replace(r"[^\w\s]", "", regex=True)
     )
     return df
-
-
-# TODO: format_last_level_options non serve più, mentre format_options deve gestire professioni e task
 
 
 def format_options(tasks: list[str]) -> str:

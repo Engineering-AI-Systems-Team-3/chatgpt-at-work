@@ -15,7 +15,7 @@ from utilities import (
     format_conversation,
     parallelize_llm_call,
     ExecutionMode,
-    RateLimiter,
+    RATE_LIMIT,
 )
 from prompts import work_related
 
@@ -125,9 +125,7 @@ def filter_work_conversations(
             results.get(f"{word_id}_{i}") for i in range(len(formatted_messages))
         ]
     else:
-        rate_limiter = RateLimiter(
-            rate=20 / 60
-        )  # free tier supports 20 requests per minute
+        rate_limiter = RateLimiter(rate=RATE_LIMIT)
         llm_call_func = functools.partial(
             parallelize_llm_call, client=client, rate_limiter=rate_limiter
         )

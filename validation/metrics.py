@@ -15,17 +15,22 @@ def work_related_metrics(
     :param pos_label: The string that represents the positive class.
     :return: Dict with keys accuracy, fpr, tpr, cohen_kappa.
     """
+    accuracy = (y_true == y_pred).mean()
+
     tp = sum((y_pred == pos_label) & (y_true == pos_label))
     tn = sum((y_pred != pos_label) & (y_true != pos_label))
     fp = sum((y_pred == pos_label) & (y_true != pos_label))
     fn = sum((y_pred != pos_label) & (y_true == pos_label))
-    total = len(y_true)
+
+    kappa = cohen_kappa_score(y_true, y_pred)
 
     return {
-        "accuracy": (tp + tn) / total if total > 0 else 0,
+        "accuracy": accuracy,
         "fpr": fp / (fp + tn) if (fp + tn) > 0 else 0,
         "tpr": tp / (tp + fn) if (tp + fn) > 0 else 0,
-        "cohen_kappa": cohen_kappa_score(y_true, y_pred),
+        "precision": tp / (tp + fp) if (tp + fp) > 0 else 0,
+        "recall": tp / (tp + fn) if (tp + fn) > 0 else 0,
+        "cohen_kappa": kappa,
     }
 
 

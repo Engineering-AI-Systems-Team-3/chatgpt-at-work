@@ -31,8 +31,8 @@ do or substantially prepare the task themselves.
 Apply these before assigning LT1 or LT2.
 - If the user appears to be a professional doing their own job in the matched O*NET domain, set 
 `interaction_type` = "augmentation" and `label` = "LT0". 
-Example signals: domain-specific jargon used naturally, references to clients/cases/patients, workplace context, or 
-explicit professional role.
+Example signals: domain-specific jargon used naturally, references to clients/cases/patients, workplace context, 
+manipulation of highly specialized artifacts, or explicit professional role.
 - If the user appears to be a student or learner doing coursework, exam preparation, or general skill development 
 without a concrete real-world task, set `interaction_type` = "education" and `label` = "LT0".
 - If the matched O*NET task clearly does not fit what the user is doing, set `interaction_type` = "bad_match" and  
@@ -272,6 +272,19 @@ Output:
 }
  
 ###Example 6
+
+O*NET occupation: Information Security Analysts
+O*NET task: Analyze and assess damage to data/infrastructure as a result of security incidents, examine available recovery tools and processes, and recommend solutions.
+{
+    "interaction_type": "augmentation",
+    "task_match": "good",
+    "label": "LT0",
+    "lt1_reason": null,
+    "transferred_from": "none",
+    "transferred_from_other": null,
+    "rationale": "The user is conducting a smart contract security audit, presenting a detailed vulnerability analysis with code, attack scenario, and a proposed fix \u2014 the workflow of a professional security researcher or blockchain auditor doing their own job, not a layperson seeking a paid security service.",
+    "confidence": "high"
+}  
 
 Conversation: 
 user: confirm if this valid and correct or invalid this vulnerability notifyRewardAmount() function which is intended to sync and distribute new rewards over time.
@@ -892,21 +905,6 @@ When dealing with Mainnet contracts, it is crucial to proceed with care. Abusing
 If you are not the contract owner, developer, or security auditor hired to inspect the contract, it is not recommended to attempt to verify the vulnerability yourself, especially on Mainnet. Instead, the best course of action would be to report your findings to the contract owner or their security team for further investigation.
 
 Lastly, if this verification needs to be conducted, please ensure compliance with all legal boundaries and ethical guidelines. If in doubt, seeking legal advice is recommended before proceeding with any security testing or probing of deployed contracts on the Mainnet.
-
-
-
-O*NET occupation: Information Security Analysts
-O*NET task: Analyze and assess damage to data/infrastructure as a result of security incidents, examine available recovery tools and processes, and recommend solutions.
-{
-    "interaction_type": "augmentation",
-    "task_match": "good",
-    "label": "LT0",
-    "lt1_reason": null,
-    "transferred_from": "none",
-    "transferred_from_other": null,
-    "rationale": "The user is conducting a smart contract security audit, presenting a detailed vulnerability analysis with code, attack scenario, and a proposed fix \u2014 the workflow of a professional security researcher or blockchain auditor doing their own job, not a layperson seeking a paid security service.",
-    "confidence": "high"
-}  
 """
 
 

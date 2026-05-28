@@ -15,6 +15,7 @@ from utilities import (
     parallelize_llm_call,
     ExecutionMode,
     format_conversation,
+    RATE_LIMIT,
 )
 from prompts import labor_transfer
 
@@ -93,7 +94,7 @@ def _direct_execution(client: OpenAI, df: pd.DataFrame) -> list:
         clean_messages = _clean_messages_payload(messages_list=messages)
         formatted_messages.append(clean_messages)
 
-    rate_limiter = RateLimiter(rate=20 / 60)  # 20 requests per minute
+    rate_limiter = RateLimiter(rate=RATE_LIMIT)  # requests per minute
     llm_call_func = functools.partial(
         parallelize_llm_call, client=client, rate_limiter=rate_limiter
     )
