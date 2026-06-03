@@ -10,7 +10,8 @@ from .labor_transfer import (
     expand_labor_transfer_labels,
     parse_labor_transfer_batch_results,
 )
-from .timezones import get_timezone_for_location, find_timezones, normalize_timezone
+from .timezones import find_timezones, normalize_timezone
+from .patents import analyze_patents
 
 __all__ = [
     "load_wildchat",
@@ -24,7 +25,7 @@ __all__ = [
     "analyze_labor_transfer",
     "expand_labor_transfer_labels",
     "parse_labor_transfer_batch_results",
-    "get_timezone_for_location",
     "find_timezones",
     "normalize_timezone",
+    "analyze_patents",
 ]

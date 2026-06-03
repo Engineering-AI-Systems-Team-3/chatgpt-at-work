@@ -102,13 +102,14 @@ def check_consensus(items: list[str] | str) -> str | None:
                 if stats["count"] == max_count:
                     return f"{profession}:{stats['task']}"
     except Exception as e:
-        print(f"Error processing items: {items}: {e}")
+        # print(f"Error processing items: {items}: {e}")
+        return None
     return None
 
 
 def filter_task_mappings(df: pd.DataFrame, column_name: str) -> pd.DataFrame:
     """
-    Keep only rows where a majority profession consensus exists at level 0.
+    Keep only rows where a majority profession consensus exists.
 
     :param df: DataFrame containing task mapping results.
     :param column_name: Column holding the list of profession:task candidates.

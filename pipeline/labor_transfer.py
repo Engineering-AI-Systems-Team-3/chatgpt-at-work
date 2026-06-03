@@ -46,6 +46,9 @@ def _parse_labor_transfer_content(content: str):
     Helper function to parse the actual LLM string response.
     Can be used by both direct and batch execution parsing.
     """
+    if not content:
+        return None
+
     try:
         parsed_content = json.loads(content)
         return parsed_content

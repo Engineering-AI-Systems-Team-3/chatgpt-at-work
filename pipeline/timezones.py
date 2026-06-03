@@ -4,7 +4,7 @@ from geopy.geocoders import Nominatim
 from timezonefinder import TimezoneFinder
 
 
-def get_timezone_for_location(
+def _get_timezone_for_location(
     state: str, country: str, geolocator: Nominatim, tf: TimezoneFinder
 ) -> str | None:
     """
@@ -51,7 +51,7 @@ def find_timezones(df: pd.DataFrame) -> pd.DataFrame:
     for _, row in unique_locations.iterrows():
         state = row["state"]
         country = row["country"]
-        timezone = get_timezone_for_location(
+        timezone = _get_timezone_for_location(
             state=state, country=country, geolocator=geolocator, tf=tf
         )
         time.sleep(1)  # Respect geocoding service rate limits
