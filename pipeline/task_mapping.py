@@ -363,7 +363,7 @@ def map_conversation_to_task(
     :return: DataFrame with columns [conversation, professions, tasks].
     """
     n_options = 5
-    if execution_mode == ExecutionMode.DIRECT:
+    if getattr(execution_mode, "value") == ExecutionMode.DIRECT.value:
         return _direct_execution(
             client=client,
             conversations=conversations,
@@ -371,7 +371,7 @@ def map_conversation_to_task(
             path=path,
             n_options=n_options,
         )
-    elif execution_mode == ExecutionMode.BATCH:
+    elif getattr(execution_mode, "value") == ExecutionMode.BATCH.value:
         return _batch_execution(
             client=client,
             conversations=conversations,
